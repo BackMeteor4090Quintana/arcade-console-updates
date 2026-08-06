@@ -1,6 +1,7 @@
 {
   "version": "1.0.1",
-  "titulo": "Sistema actualizado",
-  "mensaje": "Tu consola ya tiene instalada la versión más reciente.",
-  "disponible": false
+  "available": false,
+  "title": "Sistema actualizado",
+  "message": "Tu consola tiene instalada la versión más reciente.",
+  "details": "No hay actualizaciones disponibles por ahora."
 }
