@@ -1,7 +1,6 @@
 {
-  "version": "1.0.1",
-  "available": false,
-  "title": "Sistema actualizado",
-  "message": "Tu consola tiene instalada la versión más reciente.",
-  "details": "No hay actualizaciones disponibles por ahora."
+  "version": "1.0.2",
+  "available": true,
+  "title": "Nueva actualizacion",
+  "message": "Hay una nueva version disponible para instalar desde la tarjeta SD."
 }
