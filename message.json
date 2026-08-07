@@ -2,5 +2,6 @@
   "id": 1,
   "available": true,
   "title": "HOLA HERMOSA",
-  "message": "Recuerda que te amo con todo mi ser"
+  "message": "Recuerda que te amo con todo mi ser",
+  "animation": "hearts"
 }
