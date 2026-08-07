@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#12090d">
+<title>COCODRILO LOVE ❤️</title>
+<style>
+:root{color-scheme:dark;--bg:#12090d;--panel:#1b0d13;--text:#fff4f7;--muted:#cdaeb8;--accent:#ff4f7b;--ok:#8ff0b2}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;min-height:100dvh;display:grid;place-items:center;overflow:hidden;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);background:radial-gradient(circle at 50% 20%,rgba(255,79,123,.18),transparent 28rem),linear-gradient(180deg,#160a10,var(--bg))}
+main{width:min(92vw,430px);text-align:center;padding:30px 22px 26px;border:1px solid rgba(255,255,255,.08);border-radius:28px;background:linear-gradient(180deg,rgba(37,16,25,.94),rgba(27,13,19,.94));box-shadow:0 25px 80px rgba(0,0,0,.42)}
+.badge{font-size:12px;font-weight:800;letter-spacing:.16em;color:#ff8faa}h1{margin:8px 0 5px;font-size:clamp(28px,8vw,42px)}p{margin:0;color:var(--muted)}
+.wrap{height:210px;display:grid;place-items:center}
+button{border:0;width:155px;height:155px;border-radius:50%;font-size:75px;cursor:pointer;background:radial-gradient(circle at 38% 30%,rgba(255,255,255,.22),transparent 22%),linear-gradient(145deg,#ff6c91,#e52c62);box-shadow:0 18px 35px rgba(229,44,98,.28);transition:transform .12s;user-select:none;-webkit-tap-highlight-color:transparent}
+button:active{transform:scale(.91)}button:disabled{opacity:.65}
+button.sent{animation:pulse .45s ease}@keyframes pulse{35%{transform:scale(1.18)}}
+.status{min-height:26px;font-weight:700;color:var(--muted)}.ok{color:var(--ok)}.err{color:#ff9ead}.counter{font-size:12px;color:#967b84}
+.float{position:fixed;pointer-events:none;font-size:26px;animation:fly 1.7s ease-out forwards}@keyframes fly{from{transform:translate(-50%,0) scale(.75);opacity:1}to{transform:translate(calc(-50% + var(--d)),-190px) scale(1.35) rotate(var(--r));opacity:0}}
+footer{margin-top:22px;font-size:11px;color:#725e65}
+</style>
+</head>
+<body>
+<main>
+<div class="badge">🐊 COCODRILO LOVE</div>
+<h1>Te mando un corazón</h1>
+<p>Un toque. Nada más. ❤️</p>
+<div class="wrap"><button id="btn" aria-label="Mandar corazón">❤️</button></div>
+<div class="status" id="status">Listo para enviar</div>
+<div class="counter" id="counter">—</div>
+<footer>COCODRILO OS</footer>
+</main>
+<script>
+const DB="https://cocodrilo-love-default-rtdb.firebaseio.com";
+const btn=document.getElementById("btn"),statusEl=document.getElementById("status"),counter=document.getElementById("counter");
+
+async function readHeart(){
+  const r=await fetch(DB+"/heart.json",{cache:"no-store"});
+  if(!r.ok) throw new Error("Firebase "+r.status);
+  const v=Number(await r.json());
+  return Number.isFinite(v)?v:0;
+}
+async function writeHeart(v){
+  const r=await fetch(DB+"/heart.json",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(v)});
+  if(!r.ok) throw new Error("Firebase "+r.status);
+}
+function hearts(){
+  const x=btn.getBoundingClientRect(),cx=x.left+x.width/2,cy=x.top+x.height/2;
+  for(let i=0;i<8;i++){
+    const h=document.createElement("div");h.className="float";h.textContent=i%3?"❤️":"💖";
+    h.style.left=(cx+Math.random()*50-25)+"px";h.style.top=(cy+Math.random()*24-12)+"px";
+    h.style.setProperty("--d",(Math.random()*130-65)+"px");h.style.setProperty("--r",(Math.random()*70-35)+"deg");
+    document.body.appendChild(h);setTimeout(()=>h.remove(),1900);
+  }
+}
+async function refresh(){try{const n=await readHeart();counter.textContent="Corazones enviados: "+n}catch{counter.textContent="No se pudo leer el contador"}}
+btn.onclick=async()=>{
+  btn.disabled=true;statusEl.className="status";statusEl.textContent="Mandando corazón…";
+  try{
+    const n=(await readHeart())+1;await writeHeart(n);
+    btn.classList.remove("sent");void btn.offsetWidth;btn.classList.add("sent");hearts();
+    statusEl.className="status ok";statusEl.textContent="❤️ Corazón enviado";
+    counter.textContent="Corazones enviados: "+n;
+    if(navigator.vibrate)navigator.vibrate(40);
+  }catch(e){console.error(e);statusEl.className="status err";statusEl.textContent="No se pudo enviar 😭"}
+  finally{setTimeout(()=>btn.disabled=false,250)}
+};
+refresh();
+</script>
+</body></html>
