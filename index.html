@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#17cfd0">
-  <title>Arcade Console — Actualizaciones</title>
+  <title>COCODRILO OS — Actualizaciones</title>
   <style>
     :root {
       color-scheme: dark;
@@ -177,9 +177,9 @@
 <body>
   <main class="wrap">
     <header>
-      <div class="logo" aria-hidden="true">AC</div>
-      <h1>Arcade Console</h1>
-      <p class="subtitle">Actualizaciones oficiales y soporte</p>
+      <div class="logo" aria-hidden="true">🐊</div>
+      <h1>COCODRILO OS</h1>
+      <p class="subtitle">Actualizaciones y soporte oficial</p>
     </header>
 
     <section class="card">
@@ -193,7 +193,7 @@
         <strong id="version">—</strong>
       </div>
 
-      <h2 id="titulo">Actualización de Arcade Console</h2>
+      <h2 id="titulo">Actualización de COCODRILO OS</h2>
       <p id="mensaje">Cargando información…</p>
 
       <a id="descarga" class="download" href="#" aria-disabled="true">
@@ -220,13 +220,13 @@
     <section class="card">
       <h2>Importante</h2>
       <p>
-        Utiliza solamente archivos publicados en esta página oficial.
+        Utiliza solamente actualizaciones publicadas en esta página oficial.
         No apagues la consola ni retires la tarjeta SD mientras se esté instalando una actualización.
       </p>
     </section>
 
     <footer>
-      Arcade Console · Sitio oficial de actualizaciones
+      COCODRILO OS · Sitio oficial de actualizaciones
     </footer>
   </main>
 
@@ -251,10 +251,10 @@
         const datos = await respuesta.json();
 
         version.textContent = datos.version || "—";
-        titulo.textContent = datos.title || "Actualización de Arcade Console";
+        titulo.textContent = datos.title || "Actualización de COCODRILO OS";
         mensaje.textContent =
           datos.message ||
-          "Consulta aquí las versiones oficiales de Arcade Console.";
+          "Consulta aquí las versiones oficiales de COCODRILO OS.";
 
         estado.textContent = datos.available
           ? "Actualización publicada"
@@ -278,7 +278,7 @@
         }
       } catch (error) {
         estado.textContent = "No se pudo consultar update.json";
-        titulo.textContent = "Arcade Console";
+        titulo.textContent = "COCODRILO OS";
         mensaje.textContent =
           "La página está disponible, pero la información de versión no pudo cargarse.";
       }
