@@ -602,8 +602,18 @@
     });
 
     const coreBase = "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd";
+    const ffmpegBase = "https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.15/dist/esm";
+
+    // GitHub Pages y el CDN son orígenes distintos. El Worker de @ffmpeg/ffmpeg
+    // no puede crearse directamente desde jsDelivr, así que lo convertimos
+    // primero a una URL blob del mismo origen lógico que la página.
+    const workerURL = await toBlobURL(
+      `${ffmpegBase}/worker.js`,
+      "text/javascript"
+    );
 
     await ffmpeg.load({
+      classWorkerURL: workerURL,
       coreURL: await toBlobURL(`${coreBase}/ffmpeg-core.js`, "text/javascript"),
       wasmURL: await toBlobURL(`${coreBase}/ffmpeg-core.wasm`, "application/wasm")
     });
