@@ -39,9 +39,17 @@ async function readHeart(){
   const v=Number(await r.json());
   return Number.isFinite(v)?v:0;
 }
-async function writeHeart(v){
-  const r=await fetch(DB+"/heart.json",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(v)});
+async function incrementHeart(){
+  // Incremento atomico de Firebase: NO depende de poder leer primero.
+  // Evita que una falla temporal/permisos de lectura bloqueen el envio.
+  const r=await fetch(DB+"/heart.json",{
+    method:"PUT",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({".sv":{"increment":1}})
+  });
   if(!r.ok) throw new Error("Firebase "+r.status);
+  const v=Number(await r.json());
+  return Number.isFinite(v)?v:null;
 }
 function hearts(){
   const x=btn.getBoundingClientRect(),cx=x.left+x.width/2,cy=x.top+x.height/2;
@@ -52,16 +60,29 @@ function hearts(){
     document.body.appendChild(h);setTimeout(()=>h.remove(),1900);
   }
 }
-async function refresh(){try{const n=await readHeart();counter.textContent="Corazones enviados: "+n}catch{counter.textContent="No se pudo leer el contador"}}
+async function refresh(){
+  try{
+    const n=await readHeart();
+    counter.textContent="Corazones enviados: "+n;
+  }catch(e){
+    console.warn("Contador no disponible:",e);
+    counter.textContent="Contador no disponible · igual puedes mandar ❤️";
+  }
+}
 btn.onclick=async()=>{
   btn.disabled=true;statusEl.className="status";statusEl.textContent="Mandando corazón…";
   try{
-    const n=(await readHeart())+1;await writeHeart(n);
+    const n=await incrementHeart();
     btn.classList.remove("sent");void btn.offsetWidth;btn.classList.add("sent");hearts();
     statusEl.className="status ok";statusEl.textContent="❤️ Corazón enviado";
-    counter.textContent="Corazones enviados: "+n;
+    if(n!==null) counter.textContent="Corazones enviados: "+n;
+    else refresh();
     if(navigator.vibrate)navigator.vibrate(40);
-  }catch(e){console.error(e);statusEl.className="status err";statusEl.textContent="No se pudo enviar 😭"}
+  }catch(e){
+    console.error(e);
+    statusEl.className="status err";
+    statusEl.textContent="No se pudo enviar 😭";
+  }
   finally{setTimeout(()=>btn.disabled=false,250)}
 };
 refresh();
